@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mini Shooter</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #14141e;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+#juego {
+    width: 900px;
+    height: 600px;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: auto;
+    position: relative;
+    background: #1e1e2c;
+    overflow: hidden;
+}
+
+/* MENÚ */
+
+#menu,
+#pausa {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #151520;
+    z-index: 10;
+}
+
+h1 {
+    font-size: 60px;
+    margin-bottom: 40px;
+}
+
+button {
+    width: 250px;
+    padding: 18px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+}
+
+#jugar {
+    background: #35c878;
+}
+
+#salir {
+    background: #e84848;
+}
+
+#continuar {
+    background: #35c878;
+}
+
+#volver {
+    background: #e84848;
+}
+
+/* INFORMACIÓN */
+
+#informacion {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 22px;
+    z-index: 5;
+}
+
+/* JUGADOR */
+
+#jugador {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #3c96ff;
+    border-radius: 6px;
+}
+
+/* ENEMIGO */
+
+.enemigo {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #ff4040;
+    border-radius: 50%;
+}
+
+/* BALAS */
+
+.bala {
+    position: absolute;
+    width: 8px;
+    height: 20px;
+    background: #ffe033;
+    border-radius: 5px;
+}
+
+.oculto {
+    display: none !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="juego">
+
+    <!-- MENÚ -->
+
+    <div id="menu">
+
+        <h1>🔫 MINI SHOOTER</h1>
+
+        <button id="jugar">JUGAR</button>
+
+        <button id="salir">SALIR</button>
+
+    </div>
+
+    <!-- PAUSA -->
+
+    <div id="pausa" class="oculto">
+
+        <h1>⏸️ PAUSA</h1>
+
+        <button id="continuar">
+            CONTINUAR
+        </button>
+
+        <button id="volver">
+            MENÚ PRINCIPAL
+        </button>
+
+    </div>
+
+    <!-- INFORMACIÓN -->
+
+    <div id="informacion">
+
+        <span id="puntos">
+            Puntos: 0
+        </span>
+
+        <span>
+            ⬅️⬆️⬇️➡️ Mover
+            | ESPACIO 🔫
+            | ESC ⏸️
+        </span>
+
+    </div>
+
+    <!-- JUGADOR -->
+
+    <div id="jugador"></div>
+
+</div>
+
+<script>
+
+const juego = document.getElementById("juego");
+const jugador = document.getElementById("jugador");
+
+const menu = document.getElementById("menu");
+const pausa = document.getElementById("pausa");
+
+const puntosTexto = document.getElementById("puntos");
+
+const botonJugar = document.getElementById("jugar");
+const botonSalir = document.getElementById("salir");
+
+const botonContinuar = document.getElementById("continuar");
+const botonVolver = document.getElementById("volver");
+
+let x = 430;
+let y = 500;
+
+let puntos = 0;
+
+let pausado = false;
+let jugando = false;
+
+let teclas = {};
+
+let enemigo;
+
+let balas = [];
+
+/* TECLADO */
+
+document.addEventListener("keydown", function(evento) {
+
+    teclas[evento.key] = true;
+
+    if (evento.code === "Space") {
+
+        evento.preventDefault();
+
+        if (jugando && !pausado) {
+            disparar();
+        }
+
+    }
+
+    if (evento.key === "Escape") {
+
+        if (!jugando) return;
+
+        pausado = !pausado;
+
+        if (pausado) {
+            pausa.classList.remove("oculto");
+        } else {
+            pausa.classList.add("oculto");
+        }
+
+    }
+
+});
+
+document.addEventListener("keyup", function(evento) {
+
+    teclas[evento.key] = false;
+
+});
+
+/* JUGAR */
+
+botonJugar.onclick = function() {
+
+    menu.classList.add("oculto");
+
+    jugador.style.display = "block";
+
+    jugando = true;
+
+    pausado = false;
+
+    puntos = 0;
+
+    x = 430;
+    y = 500;
+
+    puntosTexto.textContent = "Puntos: 0";
+
+    crearEnemigo();
+
+};
+
+/* SALIR */
+
+botonSalir.onclick = function() {
+
+    alert("¡Gracias por jugar!");
+
+};
+
+/* CONTINUAR */
+
+botonContinuar.onclick = function() {
+
+    pausado = false;
+
+    pausa.classList.add("oculto");
+
+};
+
+/* VOLVER AL MENÚ */
+
+botonVolver.onclick = function() {
+
+    pausado = false;
+
+    jugando = false;
+
+    pausa.classList.add("oculto");
+
+    menu.classList.remove("oculto");
+
+    if (enemigo) {
+        enemigo.remove();
+        enemigo = null;
+    }
+
+};
+
+/* CREAR ENEMIGO */
+
+function crearEnemigo() {
+
+    if (enemigo) {
+        enemigo.remove();
+    }
+
+    enemigo = document.createElement("div");
+
+    enemigo.className = "enemigo";
+
+    enemigo.style.left =
+        Math.random() * 820 + "px";
+
+    enemigo.style.top =
+        (80 + Math.random() * 350) + "px";
+
+    juego.appendChild(enemigo);
+
+}
+
+/* DISPARAR */
+
+function disparar() {
+
+    const bala = document.createElement("div");
+
+    bala.className = "bala";
+
+    bala.style.left =
+        (x + 16) + "px";
+
+    bala.style.top =
+        (y - 20) + "px";
+
+    juego.appendChild(bala);
+
+    balas.push({
+        elemento: bala,
+        x: x + 16,
+        y: y - 20
+    });
+
+}
+
+/* ACTUALIZAR JUEGO */
+
+function actualizar() {
+
+    if (jugando && !pausado) {
+
+        /* MOVIMIENTO */
+
+        if (teclas["ArrowLeft"]) {
+            x -= 6;
+        }
+
+        if (teclas["ArrowRight"]) {
+            x += 6;
+        }
+
+        if (teclas["ArrowUp"]) {
+            y -= 6;
+        }
+
+        if (teclas["ArrowDown"]) {
+            y += 6;
+        }
+
+        /* LIMITES */
+
+        x = Math.max(
+            0,
+            Math.min(860, x)
+        );
+
+        y = Math.max(
+            60,
+            Math.min(540, y)
+        );
+
+        jugador.style.left = x + "px";
+        jugador.style.top = y + "px";
+
+        /* BALAS */
+
+        for (let i = balas.length - 1; i >= 0; i--) {
+
+            const bala = balas[i];
+
+            bala.y -= 10;
+
+            bala.elemento.style.left =
+                bala.x + "px";
+
+            bala.elemento.style.top =
+                bala.y + "px";
+
+            /* FUERA */
+
+            if (bala.y < 0) {
+
+                bala.elemento.remove();
+
+                balas.splice(i, 1);
+
+                continue;
+
+            }
+
+            /* COLISIÓN */
+
+            if (enemigo) {
+
+                const enemigoX =
+                    parseFloat(enemigo.style.left);
+
+                const enemigoY =
+                    parseFloat(enemigo.style.top);
+
+                if (
+                    bala.x > enemigoX &&
+                    bala.x < enemigoX + 40 &&
+                    bala.y > enemigoY &&
+                    bala.y < enemigoY + 40
+                ) {
+
+                    puntos++;
+
+                    puntosTexto.textContent =
+                        "Puntos: " + puntos;
+
+                    bala.elemento.remove();
+
+                    balas.splice(i, 1);
+
+                    crearEnemigo();
+
+                }
+
+            }
+
+        }
+
+    }
+
+    requestAnimationFrame(actualizar);
+
+}
+
+/* INICIAR */
+
+actualizar();
+
+</script>
+
+</body>
+</html>
