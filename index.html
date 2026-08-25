@@ -12,116 +12,234 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
     margin: 0;
-    background: #14141e;
-    color: white;
-    font-family: Arial, sans-serif;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background: #111;
+    font-family: Arial, sans-serif;
 }
 
 #juego {
-    width: 900px;
-    height: 600px;
-    max-width: 100vw;
-    max-height: 100vh;
-    margin: auto;
-    position: relative;
-    background: #1e1e2c;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
     overflow: hidden;
+    background:
+        radial-gradient(circle at center, #25253a 0%, #101018 100%);
 }
 
-/* MENÚ */
+/* ---------------- MENÚ ---------------- */
 
 #menu,
 #pausa {
+
     position: absolute;
+
     inset: 0;
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
+
     align-items: center;
-    background: #151520;
-    z-index: 10;
+
+    background: rgba(10, 10, 20, 0.94);
+
+    z-index: 100;
 }
 
-h1 {
-    font-size: 60px;
-    margin-bottom: 40px;
+#menu h1,
+#pausa h1 {
+
+    font-size: clamp(45px, 7vw, 90px);
+
+    margin: 0 0 40px;
+
+    text-shadow:
+        0 0 10px #fff,
+        0 0 25px #4b8cff;
+
 }
 
 button {
-    width: 250px;
+
+    width: min(300px, 80vw);
+
     padding: 18px;
+
     margin: 10px;
+
     border: none;
-    border-radius: 10px;
+
+    border-radius: 12px;
+
     font-size: 24px;
-    cursor: pointer;
+
+    font-weight: bold;
+
     color: white;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+
 }
 
-#jugar {
-    background: #35c878;
+button:hover {
+
+    transform: scale(1.06);
+
 }
 
-#salir {
-    background: #e84848;
-}
-
+#jugar,
 #continuar {
-    background: #35c878;
+
+    background: #32d477;
+
+    box-shadow: 0 0 20px rgba(50, 212, 119, 0.4);
+
 }
 
+#salir,
 #volver {
-    background: #e84848;
+
+    background: #e84747;
+
 }
 
-/* INFORMACIÓN */
+/* ---------------- INFORMACIÓN ---------------- */
 
 #informacion {
+
     position: absolute;
+
     top: 15px;
+
     left: 20px;
+
     right: 20px;
+
     display: flex;
+
     justify-content: space-between;
-    font-size: 22px;
-    z-index: 5;
+
+    align-items: center;
+
+    font-size: clamp(15px, 2vw, 24px);
+
+    font-weight: bold;
+
+    color: white;
+
+    z-index: 20;
+
+    pointer-events: none;
+
 }
 
-/* JUGADOR */
+/* ---------------- JUGADOR ---------------- */
 
 #jugador {
+
     position: absolute;
-    width: 40px;
-    height: 40px;
+
+    width: 44px;
+
+    height: 44px;
+
     background: #3c96ff;
-    border-radius: 6px;
+
+    border-radius: 8px;
+
+    box-shadow:
+
+        0 0 10px #3c96ff,
+
+        0 0 25px #3c96ff;
+
 }
 
-/* ENEMIGO */
+/* ---------------- ENEMIGO ---------------- */
 
 .enemigo {
+
     position: absolute;
-    width: 40px;
-    height: 40px;
+
+    width: 45px;
+
+    height: 45px;
+
     background: #ff4040;
+
     border-radius: 50%;
+
+    box-shadow:
+
+        0 0 10px #ff4040,
+
+        0 0 25px #ff4040;
+
 }
 
-/* BALAS */
+/* ---------------- BALAS ---------------- */
 
 .bala {
+
     position: absolute;
-    width: 8px;
-    height: 20px;
+
+    width: 9px;
+
+    height: 25px;
+
     background: #ffe033;
-    border-radius: 5px;
+
+    border-radius: 6px;
+
+    box-shadow:
+
+        0 0 8px #ffe033,
+
+        0 0 18px #ffe033;
+
+}
+
+/* ---------------- MENSAJE ---------------- */
+
+#mensaje {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: white;
+
+    font-size: 50px;
+
+    font-weight: bold;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    z-index: 50;
+
 }
 
 .oculto {
+
     display: none !important;
+
 }
 
 </style>
@@ -131,127 +249,320 @@ button {
 
 <div id="juego">
 
-    <!-- MENÚ -->
+    <!-- MENÚ PRINCIPAL -->
 
     <div id="menu">
 
         <h1>🔫 MINI SHOOTER</h1>
 
-        <button id="jugar">JUGAR</button>
+        <button id="jugar">
+            ▶ JUGAR
+        </button>
 
-        <button id="salir">SALIR</button>
+        <button id="salir">
+            ✖ SALIR
+        </button>
 
     </div>
 
-    <!-- PAUSA -->
+
+    <!-- MENÚ PAUSA -->
 
     <div id="pausa" class="oculto">
 
-        <h1>⏸️ PAUSA</h1>
+        <h1>⏸ PAUSA</h1>
 
         <button id="continuar">
-            CONTINUAR
+            ▶ CONTINUAR
         </button>
 
         <button id="volver">
-            MENÚ PRINCIPAL
+            🏠 MENÚ PRINCIPAL
         </button>
 
     </div>
+
 
     <!-- INFORMACIÓN -->
 
     <div id="informacion">
 
         <span id="puntos">
-            Puntos: 0
+            🏆 Puntos: 0
         </span>
 
         <span>
             ⬅️⬆️⬇️➡️ Mover
-            | ESPACIO 🔫
-            | ESC ⏸️
+            &nbsp; | &nbsp;
+            ESPACIO 🔫
+            &nbsp; | &nbsp;
+            ESC ⏸️
         </span>
 
     </div>
+
 
     <!-- JUGADOR -->
 
     <div id="jugador"></div>
 
+
+    <!-- MENSAJE -->
+
+    <div id="mensaje"></div>
+
 </div>
+
 
 <script>
 
-const juego = document.getElementById("juego");
-const jugador = document.getElementById("jugador");
+/* ==============================
+   ELEMENTOS
+============================== */
 
-const menu = document.getElementById("menu");
-const pausa = document.getElementById("pausa");
+const juego =
+    document.getElementById("juego");
 
-const puntosTexto = document.getElementById("puntos");
+const jugador =
+    document.getElementById("jugador");
 
-const botonJugar = document.getElementById("jugar");
-const botonSalir = document.getElementById("salir");
+const menu =
+    document.getElementById("menu");
 
-const botonContinuar = document.getElementById("continuar");
-const botonVolver = document.getElementById("volver");
+const pausa =
+    document.getElementById("pausa");
 
-let x = 430;
-let y = 500;
+const puntosTexto =
+    document.getElementById("puntos");
+
+const mensaje =
+    document.getElementById("mensaje");
+
+const botonJugar =
+    document.getElementById("jugar");
+
+const botonSalir =
+    document.getElementById("salir");
+
+const botonContinuar =
+    document.getElementById("continuar");
+
+const botonVolver =
+    document.getElementById("volver");
+
+
+/* ==============================
+   VARIABLES
+============================== */
+
+let x = 0;
+
+let y = 0;
 
 let puntos = 0;
 
-let pausado = false;
 let jugando = false;
+
+let pausado = false;
 
 let teclas = {};
 
-let enemigo;
+let enemigo = null;
 
 let balas = [];
 
-/* TECLADO */
 
-document.addEventListener("keydown", function(evento) {
+/* ==============================
+   SONIDO
+============================== */
 
-    teclas[evento.key] = true;
+let audioContext = null;
 
-    if (evento.code === "Space") {
 
-        evento.preventDefault();
+function iniciarAudio() {
 
-        if (jugando && !pausado) {
-            disparar();
-        }
+    if (!audioContext) {
 
-    }
-
-    if (evento.key === "Escape") {
-
-        if (!jugando) return;
-
-        pausado = !pausado;
-
-        if (pausado) {
-            pausa.classList.remove("oculto");
-        } else {
-            pausa.classList.add("oculto");
-        }
+        audioContext =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
 
     }
 
-});
+    if (audioContext.state === "suspended") {
 
-document.addEventListener("keyup", function(evento) {
+        audioContext.resume();
 
-    teclas[evento.key] = false;
+    }
 
-});
+}
 
-/* JUGAR */
+
+/* SONIDO DE DISPARO */
+
+function sonidoDisparo() {
+
+    iniciarAudio();
+
+    const oscilador =
+        audioContext.createOscillator();
+
+    const ganancia =
+        audioContext.createGain();
+
+    oscilador.type = "square";
+
+    oscilador.frequency.setValueAtTime(
+        500,
+        audioContext.currentTime
+    );
+
+    oscilador.frequency.exponentialRampToValueAtTime(
+        100,
+        audioContext.currentTime + 0.12
+    );
+
+    ganancia.gain.setValueAtTime(
+        0.15,
+        audioContext.currentTime
+    );
+
+    ganancia.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.12
+    );
+
+    oscilador.connect(ganancia);
+
+    ganancia.connect(audioContext.destination);
+
+    oscilador.start();
+
+    oscilador.stop(
+        audioContext.currentTime + 0.12
+    );
+
+}
+
+
+/* SONIDO DE IMPACTO */
+
+function sonidoImpacto() {
+
+    iniciarAudio();
+
+    const oscilador =
+        audioContext.createOscillator();
+
+    const ganancia =
+        audioContext.createGain();
+
+    oscilador.type = "sawtooth";
+
+    oscilador.frequency.setValueAtTime(
+        150,
+        audioContext.currentTime
+    );
+
+    oscilador.frequency.exponentialRampToValueAtTime(
+        50,
+        audioContext.currentTime + 0.18
+    );
+
+    ganancia.gain.setValueAtTime(
+        0.18,
+        audioContext.currentTime
+    );
+
+    ganancia.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.18
+    );
+
+    oscilador.connect(ganancia);
+
+    ganancia.connect(audioContext.destination);
+
+    oscilador.start();
+
+    oscilador.stop(
+        audioContext.currentTime + 0.18
+    );
+
+}
+
+
+/* ==============================
+   TECLADO
+============================== */
+
+document.addEventListener(
+    "keydown",
+    function(evento) {
+
+        teclas[evento.key] = true;
+
+
+        /* ESPACIO */
+
+        if (evento.code === "Space") {
+
+            evento.preventDefault();
+
+            if (jugando && !pausado) {
+
+                disparar();
+
+            }
+
+        }
+
+
+        /* ESC */
+
+        if (evento.key === "Escape") {
+
+            if (!jugando) return;
+
+            pausado = !pausado;
+
+            if (pausado) {
+
+                pausa.classList.remove(
+                    "oculto"
+                );
+
+            } else {
+
+                pausa.classList.add(
+                    "oculto"
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(evento) {
+
+        teclas[evento.key] = false;
+
+    }
+);
+
+
+/* ==============================
+   JUGAR
+============================== */
 
 botonJugar.onclick = function() {
+
+    iniciarAudio();
 
     menu.classList.add("oculto");
 
@@ -263,34 +574,53 @@ botonJugar.onclick = function() {
 
     puntos = 0;
 
-    x = 430;
-    y = 500;
+    balas = [];
 
-    puntosTexto.textContent = "Puntos: 0";
+    x =
+        window.innerWidth / 2 - 22;
+
+    y =
+        window.innerHeight - 100;
+
+    puntosTexto.textContent =
+        "🏆 Puntos: 0";
 
     crearEnemigo();
 
 };
 
-/* SALIR */
+
+/* ==============================
+   SALIR
+============================== */
 
 botonSalir.onclick = function() {
 
-    alert("¡Gracias por jugar!");
+    alert(
+        "¡Gracias por jugar! 🔫"
+    );
 
 };
 
-/* CONTINUAR */
+
+/* ==============================
+   CONTINUAR
+============================== */
 
 botonContinuar.onclick = function() {
 
     pausado = false;
 
-    pausa.classList.add("oculto");
+    pausa.classList.add(
+        "oculto"
+    );
 
 };
 
-/* VOLVER AL MENÚ */
+
+/* ==============================
+   VOLVER AL MENÚ
+============================== */
 
 botonVolver.onclick = function() {
 
@@ -298,117 +628,237 @@ botonVolver.onclick = function() {
 
     jugando = false;
 
-    pausa.classList.add("oculto");
+    pausa.classList.add(
+        "oculto"
+    );
 
-    menu.classList.remove("oculto");
+    menu.classList.remove(
+        "oculto"
+    );
 
     if (enemigo) {
+
         enemigo.remove();
+
         enemigo = null;
+
     }
+
+    for (const bala of balas) {
+
+        bala.elemento.remove();
+
+    }
+
+    balas = [];
 
 };
 
-/* CREAR ENEMIGO */
+
+/* ==============================
+   CREAR ENEMIGO
+============================== */
 
 function crearEnemigo() {
 
     if (enemigo) {
+
         enemigo.remove();
+
     }
 
-    enemigo = document.createElement("div");
 
-    enemigo.className = "enemigo";
+    enemigo =
+        document.createElement("div");
+
+    enemigo.className =
+        "enemigo";
+
 
     enemigo.style.left =
-        Math.random() * 820 + "px";
+        Math.random() *
+        (window.innerWidth - 50) +
+        "px";
+
 
     enemigo.style.top =
-        (80 + Math.random() * 350) + "px";
+        80 +
+        Math.random() *
+        (window.innerHeight - 180) +
+        "px";
 
-    juego.appendChild(enemigo);
+
+    juego.appendChild(
+        enemigo
+    );
 
 }
 
-/* DISPARAR */
+
+/* ==============================
+   DISPARAR
+============================== */
 
 function disparar() {
 
-    const bala = document.createElement("div");
+    sonidoDisparo();
 
-    bala.className = "bala";
+
+    const bala =
+        document.createElement("div");
+
+    bala.className =
+        "bala";
+
+
+    const balaX =
+        x + 17;
+
+
+    const balaY =
+        y - 25;
+
 
     bala.style.left =
-        (x + 16) + "px";
+        balaX + "px";
+
 
     bala.style.top =
-        (y - 20) + "px";
+        balaY + "px";
 
-    juego.appendChild(bala);
+
+    juego.appendChild(
+        bala
+    );
+
 
     balas.push({
+
         elemento: bala,
-        x: x + 16,
-        y: y - 20
+
+        x: balaX,
+
+        y: balaY
+
     });
 
 }
 
-/* ACTUALIZAR JUEGO */
+
+/* ==============================
+   IMPACTO
+============================== */
+
+function mostrarImpacto() {
+
+    mensaje.textContent =
+        "💥 ¡IMPACTO!";
+
+    mensaje.style.opacity =
+        "1";
+
+
+    setTimeout(function() {
+
+        mensaje.style.opacity =
+            "0";
+
+    }, 200);
+
+}
+
+
+/* ==============================
+   ACTUALIZAR JUEGO
+============================== */
 
 function actualizar() {
 
     if (jugando && !pausado) {
 
+
         /* MOVIMIENTO */
 
         if (teclas["ArrowLeft"]) {
-            x -= 6;
+
+            x -= 7;
+
         }
+
 
         if (teclas["ArrowRight"]) {
-            x += 6;
+
+            x += 7;
+
         }
+
 
         if (teclas["ArrowUp"]) {
-            y -= 6;
+
+            y -= 7;
+
         }
 
+
         if (teclas["ArrowDown"]) {
-            y += 6;
+
+            y += 7;
+
         }
+
 
         /* LIMITES */
 
         x = Math.max(
             0,
-            Math.min(860, x)
+            Math.min(
+                window.innerWidth - 44,
+                x
+            )
         );
+
 
         y = Math.max(
             60,
-            Math.min(540, y)
+            Math.min(
+                window.innerHeight - 44,
+                y
+            )
         );
 
-        jugador.style.left = x + "px";
-        jugador.style.top = y + "px";
+
+        jugador.style.left =
+            x + "px";
+
+
+        jugador.style.top =
+            y + "px";
+
 
         /* BALAS */
 
-        for (let i = balas.length - 1; i >= 0; i--) {
+        for (
+            let i = balas.length - 1;
+            i >= 0;
+            i--
+        ) {
 
-            const bala = balas[i];
+            const bala =
+                balas[i];
 
-            bala.y -= 10;
+
+            bala.y -= 12;
+
 
             bala.elemento.style.left =
                 bala.x + "px";
 
+
             bala.elemento.style.top =
                 bala.y + "px";
 
-            /* FUERA */
+
+            /* FUERA DE PANTALLA */
 
             if (bala.y < 0) {
 
@@ -420,31 +870,57 @@ function actualizar() {
 
             }
 
+
             /* COLISIÓN */
 
             if (enemigo) {
 
                 const enemigoX =
-                    parseFloat(enemigo.style.left);
+                    parseFloat(
+                        enemigo.style.left
+                    );
+
 
                 const enemigoY =
-                    parseFloat(enemigo.style.top);
+                    parseFloat(
+                        enemigo.style.top
+                    );
+
 
                 if (
-                    bala.x > enemigoX &&
-                    bala.x < enemigoX + 40 &&
-                    bala.y > enemigoY &&
-                    bala.y < enemigoY + 40
+
+                    bala.x + 9 >
+                    enemigoX &&
+
+                    bala.x <
+                    enemigoX + 45 &&
+
+                    bala.y + 25 >
+                    enemigoY &&
+
+                    bala.y <
+                    enemigoY + 45
+
                 ) {
 
                     puntos++;
 
+
                     puntosTexto.textContent =
-                        "Puntos: " + puntos;
+                        "🏆 Puntos: " +
+                        puntos;
+
+
+                    sonidoImpacto();
+
+                    mostrarImpacto();
+
 
                     bala.elemento.remove();
 
+
                     balas.splice(i, 1);
+
 
                     crearEnemigo();
 
@@ -456,11 +932,51 @@ function actualizar() {
 
     }
 
-    requestAnimationFrame(actualizar);
+
+    requestAnimationFrame(
+        actualizar
+    );
 
 }
 
-/* INICIAR */
+
+/* ==============================
+   CAMBIAR TAMAÑO
+============================== */
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        if (!jugando) return;
+
+        x = Math.min(
+            x,
+            window.innerWidth - 44
+        );
+
+        y = Math.min(
+            y,
+            window.innerHeight - 44
+        );
+
+    }
+);
+
+
+/* ==============================
+   INICIAR
+============================== */
+
+jugador.style.left =
+    "50%";
+
+jugador.style.top =
+    "80%";
+
+jugador.style.display =
+    "none";
+
 
 actualizar();
 
