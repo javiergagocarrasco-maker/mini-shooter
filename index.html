@@ -4,242 +4,226 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mini Shooter</title>
+<title>Disparos Antiestrés</title>
 
 <style>
 
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
-html, body {
+body {
     margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
     overflow: hidden;
-    background: #111;
+    background: #08080c;
     font-family: Arial, sans-serif;
+    cursor: crosshair;
 }
 
-#juego {
+canvas {
+    display: block;
     width: 100vw;
     height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at center, #25253a 0%, #101018 100%);
+    background: #0d0d12;
 }
 
-/* ---------------- MENÚ ---------------- */
+/* =========================
+   MENÚ DE INICIO
+========================= */
 
-#menu,
-#pausa {
-
-    position: absolute;
-
+#menuInicio {
+    position: fixed;
     inset: 0;
 
     display: flex;
 
-    flex-direction: column;
-
     justify-content: center;
-
     align-items: center;
 
-    background: rgba(10, 10, 20, 0.94);
+    background:
+        radial-gradient(
+            circle at center,
+            #252530 0%,
+            #0b0b10 70%
+        );
 
-    z-index: 100;
+    z-index: 20;
 }
 
-#menu h1,
-#pausa h1 {
+#cajaInicio {
+    width: min(90%, 500px);
 
-    font-size: clamp(45px, 7vw, 90px);
+    padding: 45px;
 
-    margin: 0 0 40px;
+    text-align: center;
 
-    text-shadow:
-        0 0 10px #fff,
-        0 0 25px #4b8cff;
+    background: rgba(20,20,27,0.95);
 
+    border: 2px solid #444;
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 0 50px rgba(0,0,0,0.8);
+}
+
+.logo {
+    font-size: 75px;
+    margin-bottom: 5px;
+}
+
+#cajaInicio h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 48px;
+
+    letter-spacing: 2px;
+}
+
+.subtitulo {
+    color: #999;
+
+    font-size: 18px;
+
+    margin-bottom: 30px;
 }
 
 button {
+    width: 100%;
 
-    width: min(300px, 80vw);
+    padding: 17px;
 
-    padding: 18px;
+    margin-top: 12px;
 
-    margin: 10px;
-
-    border: none;
+    border: 0;
 
     border-radius: 12px;
+
+    background: #33333d;
+
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #50505d;
+
+    transform: scale(1.02);
+}
+
+.botonJugar {
+    background: #e63946;
+}
+
+.botonJugar:hover {
+    background: #ff4d5a;
+}
+
+/* =========================
+   INFORMACIÓN
+========================= */
+
+#info {
+    position: fixed;
+
+    top: 15px;
+    left: 20px;
+
+    z-index: 5;
+
+    color: white;
 
     font-size: 24px;
 
     font-weight: bold;
 
-    color: white;
-
-    cursor: pointer;
-
-    transition: 0.15s;
-
-}
-
-button:hover {
-
-    transform: scale(1.06);
-
-}
-
-#jugar,
-#continuar {
-
-    background: #32d477;
-
-    box-shadow: 0 0 20px rgba(50, 212, 119, 0.4);
-
-}
-
-#salir,
-#volver {
-
-    background: #e84747;
-
-}
-
-/* ---------------- INFORMACIÓN ---------------- */
-
-#informacion {
-
-    position: absolute;
-
-    top: 15px;
-
-    left: 20px;
-
-    right: 20px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    font-size: clamp(15px, 2vw, 24px);
-
-    font-weight: bold;
-
-    color: white;
-
-    z-index: 20;
-
     pointer-events: none;
-
 }
 
-/* ---------------- JUGADOR ---------------- */
+#ayuda {
+    position: fixed;
 
-#jugador {
-
-    position: absolute;
-
-    width: 44px;
-
-    height: 44px;
-
-    background: #3c96ff;
-
-    border-radius: 8px;
-
-    box-shadow:
-
-        0 0 10px #3c96ff,
-
-        0 0 25px #3c96ff;
-
-}
-
-/* ---------------- ENEMIGO ---------------- */
-
-.enemigo {
-
-    position: absolute;
-
-    width: 45px;
-
-    height: 45px;
-
-    background: #ff4040;
-
-    border-radius: 50%;
-
-    box-shadow:
-
-        0 0 10px #ff4040,
-
-        0 0 25px #ff4040;
-
-}
-
-/* ---------------- BALAS ---------------- */
-
-.bala {
-
-    position: absolute;
-
-    width: 9px;
-
-    height: 25px;
-
-    background: #ffe033;
-
-    border-radius: 6px;
-
-    box-shadow:
-
-        0 0 8px #ffe033,
-
-        0 0 18px #ffe033;
-
-}
-
-/* ---------------- MENSAJE ---------------- */
-
-#mensaje {
-
-    position: absolute;
+    bottom: 15px;
 
     left: 50%;
 
-    top: 50%;
+    transform: translateX(-50%);
 
-    transform: translate(-50%, -50%);
+    color: #aaa;
 
-    color: white;
+    font-size: 15px;
 
-    font-size: 50px;
-
-    font-weight: bold;
+    z-index: 5;
 
     pointer-events: none;
+}
+
+/* =========================
+   FLASH
+========================= */
+
+#flash {
+    position: fixed;
+
+    inset: 0;
+
+    background: white;
 
     opacity: 0;
 
-    z-index: 50;
+    pointer-events: none;
 
+    z-index: 4;
 }
 
-.oculto {
+/* =========================
+   PAUSA
+========================= */
 
-    display: none !important;
+#menuPausa {
+    position: fixed;
 
+    inset: 0;
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: rgba(0,0,0,0.78);
+
+    z-index: 10;
+}
+
+#cajaPausa {
+    width: min(90%,420px);
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: #18181f;
+
+    border: 2px solid #444;
+
+    border-radius: 20px;
+}
+
+#cajaPausa h1 {
+    margin-top: 0;
+
+    color: white;
+
+    font-size: 48px;
 }
 
 </style>
@@ -247,160 +231,194 @@ button:hover {
 
 <body>
 
-<div id="juego">
+<!-- =========================
+     CANVAS
+========================= -->
 
-    <!-- MENÚ PRINCIPAL -->
+<canvas id="juego"></canvas>
 
-    <div id="menu">
+<!-- =========================
+     MENÚ DE INICIO
+========================= -->
 
-        <h1>🔫 MINI SHOOTER</h1>
+<div id="menuInicio">
 
-        <button id="jugar">
+    <div id="cajaInicio">
+
+        <div class="logo">
+            🔫
+        </div>
+
+        <h1>
+            DISPAROS ANTIESTRÉS
+        </h1>
+
+        <div class="subtitulo">
+            Apunta · Dispara · Relájate
+        </div>
+
+        <button
+            class="botonJugar"
+            id="jugar">
             ▶ JUGAR
         </button>
 
-        <button id="salir">
-            ✖ SALIR
+        <button id="pantallaInicio">
+            🖥️ PANTALLA COMPLETA
+        </button>
+
+        <button id="sonido">
+            🔊 SONIDO ACTIVADO
         </button>
 
     </div>
 
+</div>
 
-    <!-- MENÚ PAUSA -->
+<!-- =========================
+     INFORMACIÓN
+========================= -->
 
-    <div id="pausa" class="oculto">
+<div id="info">
+    Puntos: <span id="puntos">0</span>
+</div>
 
-        <h1>⏸ PAUSA</h1>
+<div id="ayuda">
+    🖱️ CLIC = DISPARAR |
+    ESC = PAUSA |
+    R = REINICIAR |
+    F = PANTALLA COMPLETA
+</div>
+
+<div id="flash"></div>
+
+<!-- =========================
+     MENÚ DE PAUSA
+========================= -->
+
+<div id="menuPausa">
+
+    <div id="cajaPausa">
+
+        <h1>
+            PAUSA
+        </h1>
 
         <button id="continuar">
             ▶ CONTINUAR
         </button>
 
-        <button id="volver">
+        <button id="reiniciar">
+            🔄 REINICIAR
+        </button>
+
+        <button id="pantallaCompleta">
+            🖥️ PANTALLA COMPLETA
+        </button>
+
+        <button id="salir">
             🏠 MENÚ PRINCIPAL
         </button>
 
     </div>
 
-
-    <!-- INFORMACIÓN -->
-
-    <div id="informacion">
-
-        <span id="puntos">
-            🏆 Puntos: 0
-        </span>
-
-        <span>
-            ⬅️⬆️⬇️➡️ Mover
-            &nbsp; | &nbsp;
-            ESPACIO 🔫
-            &nbsp; | &nbsp;
-            ESC ⏸️
-        </span>
-
-    </div>
-
-
-    <!-- JUGADOR -->
-
-    <div id="jugador"></div>
-
-
-    <!-- MENSAJE -->
-
-    <div id="mensaje"></div>
-
 </div>
-
 
 <script>
 
-/* ==============================
-   ELEMENTOS
-============================== */
+// ==========================================
+// CANVAS
+// ==========================================
 
-const juego =
+const canvas =
     document.getElementById("juego");
 
-const jugador =
-    document.getElementById("jugador");
-
-const menu =
-    document.getElementById("menu");
-
-const pausa =
-    document.getElementById("pausa");
+const ctx =
+    canvas.getContext("2d");
 
 const puntosTexto =
     document.getElementById("puntos");
 
-const mensaje =
-    document.getElementById("mensaje");
+const menuInicio =
+    document.getElementById("menuInicio");
 
-const botonJugar =
-    document.getElementById("jugar");
+const menuPausa =
+    document.getElementById("menuPausa");
 
-const botonSalir =
-    document.getElementById("salir");
+const flash =
+    document.getElementById("flash");
 
-const botonContinuar =
-    document.getElementById("continuar");
-
-const botonVolver =
-    document.getElementById("volver");
-
-
-/* ==============================
-   VARIABLES
-============================== */
-
-let x = 0;
-
-let y = 0;
+let ancho;
+let alto;
 
 let puntos = 0;
 
-let jugando = false;
-
 let pausado = false;
 
-let teclas = {};
+let jugando = false;
 
-let enemigo = null;
+let sonidoActivado = true;
 
-let balas = [];
+let objetivos = [];
 
+let particulas = [];
 
-/* ==============================
-   SONIDO
-============================== */
+let ratonX = 0;
+let ratonY = 0;
+
+let ultimoDisparo = 0;
+
+// ==========================================
+// TAMAÑO
+// ==========================================
+
+function cambiarTamaño() {
+
+    ancho =
+        canvas.width =
+        window.innerWidth;
+
+    alto =
+        canvas.height =
+        window.innerHeight;
+}
+
+window.addEventListener(
+    "resize",
+    cambiarTamaño
+);
+
+cambiarTamaño();
+
+// ==========================================
+// AUDIO
+// ==========================================
 
 let audioContext = null;
-
 
 function iniciarAudio() {
 
     if (!audioContext) {
 
         audioContext =
-            new (window.AudioContext ||
-            window.webkitAudioContext)();
-
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
     }
 
-    if (audioContext.state === "suspended") {
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
 
         audioContext.resume();
-
     }
-
 }
 
-
-/* SONIDO DE DISPARO */
-
 function sonidoDisparo() {
+
+    if (!sonidoActivado) return;
 
     iniciarAudio();
 
@@ -410,44 +428,45 @@ function sonidoDisparo() {
     const ganancia =
         audioContext.createGain();
 
-    oscilador.type = "square";
+    oscilador.type =
+        "sawtooth";
 
     oscilador.frequency.setValueAtTime(
-        500,
+        180,
         audioContext.currentTime
     );
 
     oscilador.frequency.exponentialRampToValueAtTime(
-        100,
-        audioContext.currentTime + 0.12
+        60,
+        audioContext.currentTime + 0.08
     );
 
     ganancia.gain.setValueAtTime(
-        0.15,
+        0.25,
         audioContext.currentTime
     );
 
     ganancia.gain.exponentialRampToValueAtTime(
         0.001,
-        audioContext.currentTime + 0.12
+        audioContext.currentTime + 0.08
     );
 
     oscilador.connect(ganancia);
 
-    ganancia.connect(audioContext.destination);
+    ganancia.connect(
+        audioContext.destination
+    );
 
     oscilador.start();
 
     oscilador.stop(
-        audioContext.currentTime + 0.12
+        audioContext.currentTime + 0.08
     );
-
 }
 
+function sonidoAcierto() {
 
-/* SONIDO DE IMPACTO */
-
-function sonidoImpacto() {
+    if (!sonidoActivado) return;
 
     iniciarAudio();
 
@@ -457,16 +476,17 @@ function sonidoImpacto() {
     const ganancia =
         audioContext.createGain();
 
-    oscilador.type = "sawtooth";
+    oscilador.type =
+        "square";
 
     oscilador.frequency.setValueAtTime(
-        150,
+        450,
         audioContext.currentTime
     );
 
     oscilador.frequency.exponentialRampToValueAtTime(
-        50,
-        audioContext.currentTime + 0.18
+        900,
+        audioContext.currentTime + 0.12
     );
 
     ganancia.gain.setValueAtTime(
@@ -476,97 +496,254 @@ function sonidoImpacto() {
 
     ganancia.gain.exponentialRampToValueAtTime(
         0.001,
-        audioContext.currentTime + 0.18
+        audioContext.currentTime + 0.12
     );
 
     oscilador.connect(ganancia);
 
-    ganancia.connect(audioContext.destination);
+    ganancia.connect(
+        audioContext.destination
+    );
 
     oscilador.start();
 
     oscilador.stop(
-        audioContext.currentTime + 0.18
+        audioContext.currentTime + 0.12
     );
-
 }
 
+// ==========================================
+// OBJETIVOS
+// ==========================================
 
-/* ==============================
-   TECLADO
-============================== */
+function crearObjetivo() {
 
-document.addEventListener(
-    "keydown",
+    const radio =
+        Math.floor(
+            Math.random() * 25
+        ) + 30;
+
+    objetivos.push({
+
+        x:
+            Math.random() *
+            (ancho - radio * 2) +
+            radio,
+
+        y:
+            Math.random() *
+            (alto - 170 - radio) +
+            100,
+
+        radio:
+            radio
+    });
+}
+
+function crearTodosLosObjetivos() {
+
+    objetivos = [];
+
+    for (
+        let i = 0;
+        i < 9;
+        i++
+    ) {
+
+        crearObjetivo();
+    }
+}
+
+// ==========================================
+// PARTÍCULAS
+// ==========================================
+
+function crearParticulas(x,y) {
+
+    for (
+        let i = 0;
+        i < 35;
+        i++
+    ) {
+
+        const angulo =
+            Math.random() *
+            Math.PI *
+            2;
+
+        const velocidad =
+            Math.random() * 7 + 2;
+
+        particulas.push({
+
+            x:x,
+
+            y:y,
+
+            vx:
+                Math.cos(angulo) *
+                velocidad,
+
+            vy:
+                Math.sin(angulo) *
+                velocidad,
+
+            vida:35
+        });
+    }
+}
+
+// ==========================================
+// DISPARAR
+// ==========================================
+
+function disparar(x,y) {
+
+    if (!jugando) return;
+
+    if (pausado) return;
+
+    const ahora =
+        Date.now();
+
+    if (
+        ahora -
+        ultimoDisparo <
+        70
+    ) {
+
+        return;
+    }
+
+    ultimoDisparo =
+        ahora;
+
+    sonidoDisparo();
+
+    flash.style.opacity =
+        "0.18";
+
+    setTimeout(
+        () => {
+
+            flash.style.opacity =
+                "0";
+
+        },
+        40
+    );
+
+    for (
+        let i =
+            objetivos.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const objetivo =
+            objetivos[i];
+
+        const distancia =
+            Math.sqrt(
+
+                (x - objetivo.x) *
+                (x - objetivo.x)
+
+                +
+
+                (y - objetivo.y) *
+                (y - objetivo.y)
+            );
+
+        if (
+            distancia <
+            objetivo.radio
+        ) {
+
+            puntos++;
+
+            puntosTexto.textContent =
+                puntos;
+
+            sonidoAcierto();
+
+            crearParticulas(
+                objetivo.x,
+                objetivo.y
+            );
+
+            objetivos.splice(
+                i,
+                1
+            );
+
+            crearObjetivo();
+
+            break;
+        }
+    }
+}
+
+// ==========================================
+// RATÓN
+// ==========================================
+
+canvas.addEventListener(
+    "mousedown",
     function(evento) {
 
-        teclas[evento.key] = true;
+        if (
+            evento.button === 0
+        ) {
 
-
-        /* ESPACIO */
-
-        if (evento.code === "Space") {
-
-            evento.preventDefault();
-
-            if (jugando && !pausado) {
-
-                disparar();
-
-            }
-
+            disparar(
+                evento.clientX,
+                evento.clientY
+            );
         }
-
-
-        /* ESC */
-
-        if (evento.key === "Escape") {
-
-            if (!jugando) return;
-
-            pausado = !pausado;
-
-            if (pausado) {
-
-                pausa.classList.remove(
-                    "oculto"
-                );
-
-            } else {
-
-                pausa.classList.add(
-                    "oculto"
-                );
-
-            }
-
-        }
-
     }
 );
 
-
 document.addEventListener(
-    "keyup",
+    "mousemove",
     function(evento) {
 
-        teclas[evento.key] = false;
+        ratonX =
+            evento.clientX;
 
+        ratonY =
+            evento.clientY;
     }
 );
 
+// ==========================================
+// PANTALLA COMPLETA
+// ==========================================
 
-/* ==============================
-   JUGAR
-============================== */
+function pantallaCompleta() {
 
-botonJugar.onclick = function() {
+    if (
+        !document.fullscreenElement
+    ) {
+
+        document.documentElement
+            .requestFullscreen();
+
+    } else {
+
+        document.exitFullscreen();
+    }
+}
+
+// ==========================================
+// EMPEZAR JUEGO
+// ==========================================
+
+function empezarJuego() {
 
     iniciarAudio();
-
-    menu.classList.add("oculto");
-
-    jugador.style.display = "block";
 
     jugando = true;
 
@@ -574,411 +751,381 @@ botonJugar.onclick = function() {
 
     puntos = 0;
 
-    balas = [];
-
-    x =
-        window.innerWidth / 2 - 22;
-
-    y =
-        window.innerHeight - 100;
-
     puntosTexto.textContent =
-        "🏆 Puntos: 0";
+        "0";
 
-    crearEnemigo();
+    particulas = [];
 
-};
+    crearTodosLosObjetivos();
 
-
-/* ==============================
-   SALIR
-============================== */
-
-botonSalir.onclick = function() {
-
-    alert(
-        "¡Gracias por jugar! 🔫"
-    );
-
-};
-
-
-/* ==============================
-   CONTINUAR
-============================== */
-
-botonContinuar.onclick = function() {
-
-    pausado = false;
-
-    pausa.classList.add(
-        "oculto"
-    );
-
-};
-
-
-/* ==============================
-   VOLVER AL MENÚ
-============================== */
-
-botonVolver.onclick = function() {
-
-    pausado = false;
-
-    jugando = false;
-
-    pausa.classList.add(
-        "oculto"
-    );
-
-    menu.classList.remove(
-        "oculto"
-    );
-
-    if (enemigo) {
-
-        enemigo.remove();
-
-        enemigo = null;
-
-    }
-
-    for (const bala of balas) {
-
-        bala.elemento.remove();
-
-    }
-
-    balas = [];
-
-};
-
-
-/* ==============================
-   CREAR ENEMIGO
-============================== */
-
-function crearEnemigo() {
-
-    if (enemigo) {
-
-        enemigo.remove();
-
-    }
-
-
-    enemigo =
-        document.createElement("div");
-
-    enemigo.className =
-        "enemigo";
-
-
-    enemigo.style.left =
-        Math.random() *
-        (window.innerWidth - 50) +
-        "px";
-
-
-    enemigo.style.top =
-        80 +
-        Math.random() *
-        (window.innerHeight - 180) +
-        "px";
-
-
-    juego.appendChild(
-        enemigo
-    );
-
+    menuInicio.style.display =
+        "none";
 }
 
-
-/* ==============================
-   DISPARAR
-============================== */
-
-function disparar() {
-
-    sonidoDisparo();
-
-
-    const bala =
-        document.createElement("div");
-
-    bala.className =
-        "bala";
-
-
-    const balaX =
-        x + 17;
-
-
-    const balaY =
-        y - 25;
-
-
-    bala.style.left =
-        balaX + "px";
-
-
-    bala.style.top =
-        balaY + "px";
-
-
-    juego.appendChild(
-        bala
-    );
-
-
-    balas.push({
-
-        elemento: bala,
-
-        x: balaX,
-
-        y: balaY
-
-    });
-
-}
-
-
-/* ==============================
-   IMPACTO
-============================== */
-
-function mostrarImpacto() {
-
-    mensaje.textContent =
-        "💥 ¡IMPACTO!";
-
-    mensaje.style.opacity =
-        "1";
-
-
-    setTimeout(function() {
-
-        mensaje.style.opacity =
-            "0";
-
-    }, 200);
-
-}
-
-
-/* ==============================
-   ACTUALIZAR JUEGO
-============================== */
-
-function actualizar() {
-
-    if (jugando && !pausado) {
-
-
-        /* MOVIMIENTO */
-
-        if (teclas["ArrowLeft"]) {
-
-            x -= 7;
-
-        }
-
-
-        if (teclas["ArrowRight"]) {
-
-            x += 7;
-
-        }
-
-
-        if (teclas["ArrowUp"]) {
-
-            y -= 7;
-
-        }
-
-
-        if (teclas["ArrowDown"]) {
-
-            y += 7;
-
-        }
-
-
-        /* LIMITES */
-
-        x = Math.max(
-            0,
-            Math.min(
-                window.innerWidth - 44,
-                x
-            )
-        );
-
-
-        y = Math.max(
-            60,
-            Math.min(
-                window.innerHeight - 44,
-                y
-            )
-        );
-
-
-        jugador.style.left =
-            x + "px";
-
-
-        jugador.style.top =
-            y + "px";
-
-
-        /* BALAS */
-
-        for (
-            let i = balas.length - 1;
-            i >= 0;
-            i--
-        ) {
-
-            const bala =
-                balas[i];
-
-
-            bala.y -= 12;
-
-
-            bala.elemento.style.left =
-                bala.x + "px";
-
-
-            bala.elemento.style.top =
-                bala.y + "px";
-
-
-            /* FUERA DE PANTALLA */
-
-            if (bala.y < 0) {
-
-                bala.elemento.remove();
-
-                balas.splice(i, 1);
-
-                continue;
-
-            }
-
-
-            /* COLISIÓN */
-
-            if (enemigo) {
-
-                const enemigoX =
-                    parseFloat(
-                        enemigo.style.left
-                    );
-
-
-                const enemigoY =
-                    parseFloat(
-                        enemigo.style.top
-                    );
-
-
-                if (
-
-                    bala.x + 9 >
-                    enemigoX &&
-
-                    bala.x <
-                    enemigoX + 45 &&
-
-                    bala.y + 25 >
-                    enemigoY &&
-
-                    bala.y <
-                    enemigoY + 45
-
-                ) {
-
-                    puntos++;
-
-
-                    puntosTexto.textContent =
-                        "🏆 Puntos: " +
-                        puntos;
-
-
-                    sonidoImpacto();
-
-                    mostrarImpacto();
-
-
-                    bala.elemento.remove();
-
-
-                    balas.splice(i, 1);
-
-
-                    crearEnemigo();
-
-                }
-
-            }
-
-        }
-
-    }
-
-
-    requestAnimationFrame(
-        actualizar
-    );
-
-}
-
-
-/* ==============================
-   CAMBIAR TAMAÑO
-============================== */
-
-window.addEventListener(
-    "resize",
+// ==========================================
+// BOTÓN JUGAR
+// ==========================================
+
+document.getElementById(
+    "jugar"
+).addEventListener(
+    "click",
+    empezarJuego
+);
+
+// ==========================================
+// SONIDO
+// ==========================================
+
+document.getElementById(
+    "sonido"
+).addEventListener(
+    "click",
     function() {
 
-        if (!jugando) return;
+        sonidoActivado =
+            !sonidoActivado;
 
-        x = Math.min(
-            x,
-            window.innerWidth - 44
-        );
-
-        y = Math.min(
-            y,
-            window.innerHeight - 44
-        );
-
+        this.textContent =
+            sonidoActivado
+            ? "🔊 SONIDO ACTIVADO"
+            : "🔇 SONIDO DESACTIVADO";
     }
 );
 
+// ==========================================
+// PANTALLA COMPLETA INICIO
+// ==========================================
 
-/* ==============================
-   INICIAR
-============================== */
+document.getElementById(
+    "pantallaInicio"
+).addEventListener(
+    "click",
+    pantallaCompleta
+);
 
-jugador.style.left =
-    "50%";
+// ==========================================
+// PAUSA
+// ==========================================
 
-jugador.style.top =
-    "80%";
+function cambiarPausa() {
 
-jugador.style.display =
-    "none";
+    if (!jugando) return;
 
+    pausado =
+        !pausado;
 
-actualizar();
+    menuPausa.style.display =
+        pausado
+        ? "flex"
+        : "none";
+}
+
+document.addEventListener(
+    "keydown",
+    function(evento) {
+
+        if (
+            evento.key ===
+            "Escape"
+        ) {
+
+            cambiarPausa();
+        }
+
+        if (
+            evento.key.toLowerCase()
+            === "r"
+        ) {
+
+            reiniciarJuego();
+        }
+
+        if (
+            evento.key.toLowerCase()
+            === "f"
+        ) {
+
+            pantallaCompleta();
+        }
+    }
+);
+
+// ==========================================
+// REINICIAR
+// ==========================================
+
+function reiniciarJuego() {
+
+    if (!jugando) return;
+
+    puntos = 0;
+
+    puntosTexto.textContent =
+        "0";
+
+    particulas = [];
+
+    crearTodosLosObjetivos();
+}
+
+document.getElementById(
+    "reiniciar"
+).addEventListener(
+    "click",
+    function() {
+
+        reiniciarJuego();
+
+        pausado = false;
+
+        menuPausa.style.display =
+            "none";
+    }
+);
+
+// ==========================================
+// CONTINUAR
+// ==========================================
+
+document.getElementById(
+    "continuar"
+).addEventListener(
+    "click",
+    function() {
+
+        pausado = false;
+
+        menuPausa.style.display =
+            "none";
+    }
+);
+
+// ==========================================
+// PANTALLA COMPLETA PAUSA
+// ==========================================
+
+document.getElementById(
+    "pantallaCompleta"
+).addEventListener(
+    "click",
+    pantallaCompleta
+);
+
+// ==========================================
+// MENÚ PRINCIPAL
+// ==========================================
+
+document.getElementById(
+    "salir"
+).addEventListener(
+    "click",
+    function() {
+
+        jugando = false;
+
+        pausado = false;
+
+        menuPausa.style.display =
+            "none";
+
+        menuInicio.style.display =
+            "flex";
+    }
+);
+
+// ==========================================
+// DIBUJAR OBJETIVOS
+// ==========================================
+
+function dibujarObjetivos() {
+
+    for (
+        const objetivo of objetivos
+    ) {
+
+        ctx.beginPath();
+
+        ctx.arc(
+            objetivo.x,
+            objetivo.y,
+            objetivo.radio,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            "#ff3030";
+
+        ctx.fill();
+
+        ctx.beginPath();
+
+        ctx.arc(
+            objetivo.x,
+            objetivo.y,
+            objetivo.radio * 0.55,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            "#ffd83d";
+
+        ctx.fill();
+
+        ctx.beginPath();
+
+        ctx.arc(
+            objetivo.x,
+            objetivo.y,
+            7,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.fill();
+    }
+}
+
+// ==========================================
+// PARTÍCULAS
+// ==========================================
+
+function actualizarParticulas() {
+
+    for (
+        let i =
+            particulas.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const p =
+            particulas[i];
+
+        p.x += p.vx;
+
+        p.y += p.vy;
+
+        p.vy += 0.12;
+
+        p.vida--;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            4,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            "#ffd83d";
+
+        ctx.fill();
+
+        if (
+            p.vida <= 0
+        ) {
+
+            particulas.splice(
+                i,
+                1
+            );
+        }
+    }
+}
+
+// ==========================================
+// MIRA
+// ==========================================
+
+function dibujarMira() {
+
+    ctx.beginPath();
+
+    ctx.arc(
+        ratonX,
+        ratonY,
+        14,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.7)";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        ratonX - 22,
+        ratonY
+    );
+
+    ctx.lineTo(
+        ratonX + 22,
+        ratonY
+    );
+
+    ctx.moveTo(
+        ratonX,
+        ratonY - 22
+    );
+
+    ctx.lineTo(
+        ratonX,
+        ratonY + 22
+    );
+
+    ctx.stroke();
+}
+
+// ==========================================
+// BUCLE
+// ==========================================
+
+function juego() {
+
+    ctx.fillStyle =
+        "#0d0d12";
+
+    ctx.fillRect(
+        0,
+        0,
+        ancho,
+        alto
+    );
+
+    if (
+        jugando &&
+        !pausado
+    ) {
+
+        dibujarObjetivos();
+
+        actualizarParticulas();
+
+        dibujarMira();
+    }
+
+    requestAnimationFrame(
+        juego
+    );
+}
+
+juego();
 
 </script>
 
